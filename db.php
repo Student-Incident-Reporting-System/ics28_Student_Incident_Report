@@ -18,5 +18,16 @@ function getDB() {
     }
     return $conn;
 }
-
+// Log user activity
+function logActivity($userId, $action, $targetTable = null, $targetId = null, $details = null) {
+    $db = getDB();
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $stmt = $db->prepare(
+        "INSERT INTO activity_logs (user_id, action, target_table, target_id, details, ip_address)
+         VALUES (?, ?, ?, ?, ?, ?)"
+    );
+    $stmt->bind_param('ississ', $userId, $action, $targetTable, $targetId, $details, $ip);
+    $stmt->execute();
+    $stmt->close();
+}
 ?>
