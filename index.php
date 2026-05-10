@@ -104,6 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-        
-
+       <div class="login-card">
+        <div class="login-header">
+            <div class="shield-icon"><i class="bi bi-shield-check"></i></div>
+            <h4 class="mb-1 fw-bold">Student Safety System</h4>
+            <p class="mb-0 opacity-75 small">Incident Reporting & Management</p>
+        </div>
 </body>
