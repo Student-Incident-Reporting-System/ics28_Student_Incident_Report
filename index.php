@@ -104,32 +104,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-       <div class="login-card">
+    <div class="login-card">
         <div class="login-header">
             <div class="shield-icon"><i class="bi bi-shield-check"></i></div>
             <h4 class="mb-1 fw-bold">Student Safety System</h4>
             <p class="mb-0 opacity-75 small">Incident Reporting & Management</p>
         </div>
-
         <div class="login-body">
             <?php if ($error): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <?= htmlspecialchars($error) ?>
+                </div>
             <?php endif; ?>
-            <form method="POST" action="">
+
+            <form method="POST" action="index.php" novalidate>
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
+                    <label for="username" class="form-label fw-semibold">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control" id="username" name="username"
+                               value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
+                               placeholder="Enter username" required autofocus>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                <div class="mb-4">
+                    <label for="password" class="form-label fw-semibold">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input type="password" class="form-control" id="password" name="password"
+                               placeholder="Enter password" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePwd">
+                            <i class="bi bi-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-login w-100">Login</button>
+                <button type="submit" class="btn btn-login w-100">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                </button>
             </form>
-            <div class="demo-creds mt-4">
-                <strong>Demo Credentials:</strong><br>
-                Username: <code>admin</code><br>
-                Password: <code>admin123</code>
+
+            <div class="demo-creds mt-3">
+                <strong><i class="bi bi-info-circle me-1"></i>Demo Credentials</strong><br>
+                Username: <code>admin</code> &nbsp;|&nbsp; Password: <code>password</code>
             </div>
-            
+
+            <p class="text-center mt-3 mb-0 small text-muted">
+                Don't have an account?
+                <a href="register.php" class="text-decoration-none fw-semibold">Create one</a>
+            </p>
+        </div>
+    </div>
+
+    // JavaScript to toggle password visibility
+   <script>
+        document.getElementById('togglePwd').addEventListener('click', function () {
+            const pwd = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.className = 'bi bi-eye-slash';
+            } else {
+                pwd.type = 'password';
+                icon.className = 'bi bi-eye';
+            }
+        });
+    </script>
+
 </body>
