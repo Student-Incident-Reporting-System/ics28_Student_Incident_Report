@@ -52,3 +52,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Login - Student Incident Report</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+         body {
+            background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            width: 100%;
+            max-width: 420px;
+        }
+        .login-header {
+            background: linear-gradient(135deg, #1a3a5c, #2d6a9f);
+            color: #fff;
+            padding: 2rem;
+            text-align: center;
+        }
+        .login-header .shield-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .login-body { padding: 2rem; }
+        .form-control:focus {
+            border-color: #2d6a9f;
+            box-shadow: 0 0 0 0.2rem rgba(45,106,159,0.25);
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #1a3a5c, #2d6a9f);
+            border: none;
+            color: #fff;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: opacity 0.2s;
+        }
+        .btn-login:hover { opacity: 0.9; color: #fff; }
+        .demo-creds {
+            background: #f0f7ff;
+            border: 1px solid #bee3f8;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+       <div class="login-card">
+        <div class="login-header">
+            <div class="shield-icon"><i class="bi bi-shield-check"></i></div>
+            <h4 class="mb-1 fw-bold">Student Safety System</h4>
+            <p class="mb-0 opacity-75 small">Incident Reporting & Management</p>
+        </div>
+
+        <div class="login-body">
+            <?php if ($error): ?>
+                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-login w-100">Login</button>
+            </form>
+            <div class="demo-creds mt-4">
+                <strong>Demo Credentials:</strong><br>
+                Username: <code>admin</code><br>
+                Password: <code>admin123</code>
+            </div>
+            
+</body>
