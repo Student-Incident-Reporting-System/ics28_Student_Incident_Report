@@ -110,4 +110,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h4 class="mb-1 fw-bold">Student Safety System</h4>
             <p class="mb-0 opacity-75 small">Incident Reporting & Management</p>
         </div>
+
+        <div class="login-body">
+            <?php if ($error): ?>
+                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-login w-100">Login</button>
+            </form>
+            <div class="demo-creds mt-4">
+                <strong>Demo Credentials:</strong><br>
+                Username: <code>admin</code><br>
+                Password: <code>admin123</code>
+            </div>
+            
 </body>
