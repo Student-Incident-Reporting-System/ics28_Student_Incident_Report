@@ -1,11 +1,11 @@
 <?php
-// ============================================================
+
 // Dashboard
 // SQL joins used:
 //   INNER JOIN  incidents ↔ students, categories, users
 //   LEFT JOIN   students  ↔ incidents  (include students with 0 incidents)
 //   LEFT JOIN   categories ↔ incidents (include categories with 0 incidents)
-// ============================================================
+
 $pageTitle = 'Dashboard';
 require_once 'db.php';
 require_once 'layout.php';

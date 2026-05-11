@@ -1,4 +1,5 @@
 <?php
+
 // Activity Logs — read-only audit trail
 // SQL joins:
 //   INNER JOIN logs ↔ users     — user name for every log entry
@@ -7,6 +8,8 @@
 $pageTitle = 'Activity Logs';
 require_once 'db.php';
 require_once 'layout.php';
+
+$db = getDB();
 
 $rows = $db->query("
     SELECT al.id, al.action, al.target_table, al.target_id,
@@ -75,6 +78,3 @@ $(()=>{ $("#tblLogs").DataTable({pageLength:25,order:[[7,"desc"]],columnDefs:[{o
 </script>';
 require_once 'layout_end.php';
 ?>
-
-
-

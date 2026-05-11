@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     </div>
 
-    // JavaScript to toggle password visibility
+    <!-- JavaScript to toggle password visibility -->
  <script>
 function togglePwd() {
     const f = document.getElementById('pwd');

@@ -15,8 +15,7 @@ $db   = getDB();
 $user = currentUser();
 $msg  = ''; $msgType = 'success';
 
-
-// ── DELETE ────
+// ── DELETE ─────────────────
 if (isset($_GET['delete']) && ctype_digit($_GET['delete'])) {
     $id   = (int)$_GET['delete'];
     $stmt = $db->prepare("SELECT incident_code FROM incidents WHERE id=?");
@@ -30,7 +29,7 @@ if (isset($_GET['delete']) && ctype_digit($_GET['delete'])) {
     }
 }
 
-// ── CREATE / UPDATE ────
+// ── CREATE / UPDATE ────────────
 if ($_SERVER['REQUEST_METHOD']==='POST') {
     $editId      = isset($_POST['edit_id']) && ctype_digit($_POST['edit_id']) ? (int)$_POST['edit_id'] : null;
     $studentId   = (int)($_POST['student_id']  ?? 0);
@@ -62,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     } else { $msg='Fill in all required fields.'; $msgType='danger'; }
 }
 
-// ── Edit prefill ───────
+// ── Edit prefill ──────────
 $edit = null;
 if (isset($_GET['edit']) && ctype_digit($_GET['edit'])) {
     $editId = (int)$_GET['edit'];
@@ -86,7 +85,7 @@ $rows = $db->query("
     ORDER BY i.incident_date DESC, i.created_at DESC
 ");
 
-// ── Dropdowns ──────
+// ── Dropdowns ────────────
 $studentOpts  = $db->query("SELECT id,student_code,first_name,last_name,grade FROM students ORDER BY last_name");
 $categoryOpts = $db->query("SELECT id,name,severity_level FROM incident_categories ORDER BY name");
 ?>
@@ -98,7 +97,6 @@ $categoryOpts = $db->query("SELECT id,name,severity_level FROM incident_categori
     <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
 </div>
 <?php endif; ?>
-
 
 <!-- Form -->
 <div class="kcard mb-4">
@@ -187,6 +185,52 @@ $categoryOpts = $db->query("SELECT id,name,severity_level FROM incident_categori
     </div>
 </div>
 
+<!-- Table -->
+<div class="kcard">
+    <div class="p-3 border-bottom fw-semibold">
+        <i class="bi bi-table me-2 text-primary"></i>All Incidents
+        <small class="text-muted ms-1">(INNER JOIN: students · categories · users)</small>
+    </div>
+    <div class="table-responsive p-2">
+        <table class="table table-hover align-middle" id="tblIncidents">
+            <thead class="table-light">
+                <tr>
+                    <th>Code</th><th>Student</th><th>Grade</th><th>Category</th>
+                    <th>Severity</th><th>Location</th><th>Date</th><th>Status</th>
+                    <th>Reporter</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php while ($row = $rows->fetch_assoc()): ?>
+                <tr>
+                    <td><code><?= htmlspecialchars($row['incident_code']) ?></code></td>
+                    <td>
+                        <div class="fw-semibold"><?= htmlspecialchars($row['student_name']) ?></div>
+                        <small class="text-muted"><?= htmlspecialchars($row['student_code']) ?></small>
+                    </td>
+                    <td><?= htmlspecialchars($row['grade']) ?></td>
+                    <td><?= htmlspecialchars($row['category']) ?></td>
+                    <td><span class="badge b-<?= $row['severity_level'] ?> rounded-pill px-2"><?= ucfirst($row['severity_level']) ?></span></td>
+                    <td><?= htmlspecialchars($row['location'] ?? '—') ?></td>
+                    <td><?= date('M d, Y', strtotime($row['incident_date'])) ?></td>
+                    <td><span class="badge b-<?= $row['status'] ?> rounded-pill px-2"><?= ucfirst(str_replace('_',' ',$row['status'])) ?></span></td>
+                    <td><?= htmlspecialchars($row['reported_by']) ?></td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="?edit=<?= $row['id'] ?>" class="btn btn-sm btn-outline-primary" title="Edit"><i class="bi bi-pencil"></i></a>
+                            <button class="btn btn-sm btn-outline-danger" title="Delete"
+                                    onclick="confirmDel(<?= $row['id'] ?>,'<?= htmlspecialchars($row['incident_code']) ?>')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <!-- Delete modal -->
 <div class="modal fade" id="delModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -216,5 +260,3 @@ function confirmDel(id,code){
 </script>';
 require_once 'layout_end.php';
 ?>
-
-

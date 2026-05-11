@@ -16,7 +16,7 @@ $db   = getDB();
 $user = currentUser();
 $msg  = ''; $msgType = 'success';
 
-// ── DELETE ────
+// ── DELETE ────────
 if (isset($_GET['delete']) && ctype_digit($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     if ($id === $user['id']) {
@@ -34,7 +34,7 @@ if (isset($_GET['delete']) && ctype_digit($_GET['delete'])) {
     }
 }
 
-// ── CREATE / UPDATE ─────
+// ── CREATE / UPDATE ───────
 if ($_SERVER['REQUEST_METHOD']==='POST') {
     $editId   = isset($_POST['edit_id']) && ctype_digit($_POST['edit_id']) ? (int)$_POST['edit_id'] : null;
     $username = trim($_POST['username']  ?? '');
@@ -72,7 +72,8 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     } else { $msg='Username and full name are required.'; $msgType='danger'; }
 }
 
-// ── Edit prefill ─────
+// ── Edit prefill ──────
+$edit = null;
 if (isset($_GET['edit']) && ctype_digit($_GET['edit'])) {
     $editId = (int)$_GET['edit'];
     $s = $db->prepare("SELECT id,username,full_name,email,role FROM users WHERE id=?");
@@ -80,7 +81,7 @@ if (isset($_GET['edit']) && ctype_digit($_GET['edit'])) {
     $edit = $s->get_result()->fetch_assoc(); $s->close();
 }
 
-// ── Fetch all users with stats (LEFT JOINs) ──────────────────
+// ── Fetch all users with stats (LEFT JOINs) ────────
 $rows = $db->query("
     SELECT u.id, u.username, u.full_name, u.email, u.role, u.created_at,
            COUNT(DISTINCT i.id)  incidents_reported,   -- LEFT JOIN: users with 0 reports still appear
