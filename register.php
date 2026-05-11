@@ -1,4 +1,5 @@
 <?php
+
 // Register Page — create a new staff account
 
 require_once 'auth.php';
@@ -11,12 +12,11 @@ $success  = false;
 $f        = [];   // form repopulation
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $f['full_name'] = trim($_POST['full_name']   ?? '');
-    $f['username']  = trim($_POST['username']    ?? '');
-    $f['email']     = trim($_POST['email']       ?? '');
+    $f['full_name'] = trim($_POST['full_name'] ?? '');
+    $f['username']  = trim($_POST['username']  ?? '');
+    $f['email']     = trim($_POST['email']     ?? '');
     $password       = $_POST['password']         ?? '';
     $confirm        = $_POST['password_confirm'] ?? '';
-
 
     if (!$f['full_name'])  $errors['full_name'] = 'Full name is required.';
     if (!$f['username'])   $errors['username']  = 'Username is required.';
@@ -72,8 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Register — Student Safety System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <style> 
-               body {
+    <style>
+        body {
             min-height: 100vh;
             background: linear-gradient(135deg,#1a3a5c 0%,#2d6a9f 100%);
             display: flex; align-items: center; justify-content: center;
@@ -106,13 +106,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1rem; transition: opacity .2s;
         }
         .btn-register:hover { opacity: .88; color: #fff; }
-        .strength-bar-bg { height: 5px; background: #e9ecef; border-radius: 3px; }
-        .strength-bar    { height: 5px; border-radius: 3px; transition: width .3s, background .3s; }
         .divider { border-top: 1px solid #e9ecef; margin: 1.2rem 0; }
     </style>
 </head>
 <body>
-    <div class="card-wrap">
+<div class="card-wrap">
     <div class="card-top">
         <div class="icon"><i class="bi bi-person-plus"></i></div>
         <h4 class="fw-bold mt-1 mb-1">Create Account</h4>
@@ -136,8 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" novalidate>
-            
-            <!-- Full Name Ni nga part -->
+            <!-- Full Name -->
             <div class="mb-3">
                 <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
                 <div class="input-group">
@@ -152,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <!-- Username diri -->
+            <!-- Username -->
             <div class="mb-3">
                 <label class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
                 <div class="input-group">
@@ -167,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <!-- Email Diri Dapita -->
+            <!-- Email -->
             <div class="mb-3">
                 <label class="form-label fw-semibold">
                     Email <span class="text-muted fw-normal small">(optional)</span>
@@ -191,8 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
                     <input type="password" name="password" id="pwd"
                            class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>"
-                           placeholder="Min. 6 characters"
-                           oninput="checkStrength(this.value)">
+                           placeholder="Min. 6 characters">
                     <button type="button" class="btn btn-outline-secondary" onclick="togglePwd('pwd','eye1')">
                         <i class="bi bi-eye" id="eye1"></i>
                     </button>
@@ -202,12 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
             <!-- Strength bar -->
-            <div class="mb-3">
-                <div class="strength-bar-bg mt-1">
-                    <div class="strength-bar" id="strengthBar" style="width:0%"></div>
-                </div>
-                <small id="strengthLabel" class="text-muted"></small>
-            </div>
+            <div class="mb-3"></div>
 
             <!-- Confirm Password -->
             <div class="mb-4">
@@ -249,34 +240,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 <script>
-    
-    function togglePwd(id, iconId) {
+function togglePwd(id, iconId) {
     const f = document.getElementById(id);
     const i = document.getElementById(iconId);
     f.type = f.type === 'password' ? 'text' : 'password';
     i.className = f.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
-}
-
-function checkStrength(v) {
-    let s = 0;
-    if (v.length >= 8)             s++;
-    if (/[A-Z]/.test(v))           s++;
-    if (/[0-9]/.test(v))           s++;
-    if (/[^A-Za-z0-9]/.test(v))   s++;
-    const map = [
-        {w:'0%',   c:'#dee2e6', t:''},
-        {w:'25%',  c:'#e74c3c', t:'Weak'},
-        {w:'50%',  c:'#f39c12', t:'Fair'},
-        {w:'75%',  c:'#3498db', t:'Good'},
-        {w:'100%', c:'#27ae60', t:'Strong'},
-    ];
-    const lvl = v.length === 0 ? map[0] : map[s];
-    const bar = document.getElementById('strengthBar');
-    const lbl = document.getElementById('strengthLabel');
-    bar.style.width      = lvl.w;
-    bar.style.background = lvl.c;
-    lbl.textContent      = lvl.t;
-    lbl.style.color      = lvl.c;
 }
 </script>
 </body>
