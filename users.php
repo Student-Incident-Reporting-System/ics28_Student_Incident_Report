@@ -111,3 +111,131 @@ $unusedCats = $db->query("
 </div>
 <?php endif; ?>
 
+<!-- RIGHT JOIN info panel -->
+<?php $unusedRows = []; while ($r = $unusedCats->fetch_assoc()) $unusedRows[] = $r; ?>
+<?php if ($unusedRows): ?>
+<div class="alert alert-info d-flex gap-2 align-items-start mb-4" style="font-size:.87rem;">
+    <i class="bi bi-info-circle-fill mt-1 flex-shrink-0"></i>
+    <div>
+        <strong>RIGHT JOIN insight:</strong> The following categories have no incidents recorded yet:
+        <?php foreach ($unusedRows as $r): ?>
+        <span class="badge b-<?= $r['severity_level'] ?> ms-1"><?= htmlspecialchars($r['name']) ?></span>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- Form -->
+<div class="kcard mb-4">
+    <div class="p-3 border-bottom fw-semibold">
+        <i class="bi bi-<?= $edit?'pencil-square':'person-plus' ?> me-2 text-primary"></i>
+        <?= $edit ? 'Edit User' : 'Add New User' ?>
+    </div>
+    <div class="p-3">
+        <form method="POST">
+            <?php if ($edit): ?><input type="hidden" name="edit_id" value="<?= $edit['id'] ?>"><?php endif; ?>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
+                    <input type="text" name="username" class="form-control" required
+                           value="<?= htmlspecialchars($edit['username'] ?? '') ?>">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                    <input type="text" name="full_name" class="form-control" required
+                           value="<?= htmlspecialchars($edit['full_name'] ?? '') ?>">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" name="email" class="form-control"
+                           value="<?= htmlspecialchars($edit['email'] ?? '') ?>">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Role</label>
+                    <select name="role" class="form-select">
+                        <option value="staff" <?= ($edit && $edit['role']==='staff')?'selected':'' ?>>Staff</option>
+                        <option value="admin" <?= ($edit && $edit['role']==='admin')?'selected':'' ?>>Admin</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                        Password <?= $edit ? '<small class="text-muted fw-normal">(blank = keep current)</small>' : '<span class="text-danger">*</span>' ?>
+                    </label>
+                    <input type="password" name="password" class="form-control"
+                           <?= !$edit?'required':'' ?>
+                           placeholder="<?= $edit?'Leave blank to keep current':'Enter password' ?>">
+                </div>
+                <div class="col-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-<?= $edit?'save':'plus-lg' ?> me-1"></i>
+                        <?= $edit ? 'Update User' : 'Create User' ?>
+                    </button>
+                    <?php if ($edit): ?>
+                    <a href="users.php" class="btn btn-outline-secondary">Cancel</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="kcard">
+    <div class="p-3 border-bottom fw-semibold">
+        <i class="bi bi-people me-2 text-primary"></i>System Users
+        <small class="text-muted ms-1">(LEFT JOIN: incidents reported · activity logs)</small>
+    </div>
+    <div class="table-responsive p-2">
+        <table class="table table-hover align-middle" id="tblUsers">
+            <thead class="table-light">
+                <tr>
+                    <th>Username</th><th>Full Name</th><th>Email</th><th>Role</th>
+                    <th>Reports</th><th>Activity</th><th>Joined</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php while ($row = $rows->fetch_assoc()): ?>
+                <tr>
+                    <td><code><?= htmlspecialchars($row['username']) ?></code></td>
+                    <td class="fw-semibold"><?= htmlspecialchars($row['full_name']) ?></td>
+                    <td><?= htmlspecialchars($row['email'] ?? '—') ?></td>
+                    <td><span class="badge rounded-pill <?= $row['role']==='admin'?'bg-danger':'bg-primary' ?>"><?= ucfirst($row['role']) ?></span></td>
+                    <td><?= $row['incidents_reported'] ?></td>
+                    <td><?= $row['activity_count'] ?></td>
+                    <td><?= date('M d, Y', strtotime($row['created_at'])) ?></td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="?edit=<?= $row['id'] ?>" class="btn btn-sm btn-outline-primary" title="Edit"><i class="bi bi-pencil"></i></a>
+                            <?php if ($row['id'] !== $user['id']): ?>
+                            <button class="btn btn-sm btn-outline-danger" title="Delete"
+                                    onclick="confirmDel(<?= $row['id'] ?>,'<?= htmlspecialchars($row['username']) ?>')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <?php else: ?>
+                            <span class="btn btn-sm btn-outline-secondary disabled"><i class="bi bi-lock"></i></span>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Delete modal -->
+<div class="modal fade" id="delModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger"><i class="bi bi-trash me-2"></i>Confirm Delete</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">Delete user <strong id="delCode"></strong>? This cannot be undone.</div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a id="delBtn" href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
