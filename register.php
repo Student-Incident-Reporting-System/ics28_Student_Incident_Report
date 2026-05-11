@@ -154,9 +154,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
+            <!-- Username diri -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-at"></i></span>
+                    <input type="text" name="username"
+                           class="form-control <?= isset($errors['username']) ? 'is-invalid' : '' ?>"
+                           value="<?= htmlspecialchars($f['username'] ?? '') ?>"
+                           placeholder="3–30 chars, letters/numbers/underscore">
+                    <?php if (isset($errors['username'])): ?>
+                    <div class="invalid-feedback"><?= htmlspecialchars($errors['username']) ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
 
-    <?php endif; ?>
-    </div>
+
 </div>
 <script>
 
