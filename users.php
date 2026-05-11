@@ -71,3 +71,11 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         }
     } else { $msg='Username and full name are required.'; $msgType='danger'; }
 }
+
+// ── Edit prefill ─────
+if (isset($_GET['edit']) && ctype_digit($_GET['edit'])) {
+    $editId = (int)$_GET['edit'];
+    $s = $db->prepare("SELECT id,username,full_name,email,role FROM users WHERE id=?");
+    $s->bind_param('i', $editId); $s->execute();
+    $edit = $s->get_result()->fetch_assoc(); $s->close();
+}
