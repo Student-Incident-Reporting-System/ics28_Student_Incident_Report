@@ -9,7 +9,8 @@ CREATE TABLE users (
     username   VARCHAR(50)  NOT NULL UNIQUE,
     password   VARCHAR(255) NOT NULL,
     full_name  VARCHAR(100) NOT NULL,
-    role       ENUM('admin','staff') NOT NULL DEFAULT 'staff',
+    role       ENUM('admin','s
+    taff') NOT NULL DEFAULT 'staff',
     email      VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAM
 );
