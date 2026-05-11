@@ -204,6 +204,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
+            <!-- Strength bar -->
+            <div class="mb-3">
+                <div class="strength-bar-bg mt-1">
+                    <div class="strength-bar" id="strengthBar" style="width:0%"></div>
+                </div>
+                <small id="strengthLabel" class="text-muted"></small>
+            </div>
+
             <!-- Confirm Password -->
             <div class="mb-4">
                 <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
