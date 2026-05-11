@@ -252,7 +252,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 <script>
+    
+    function togglePwd(id, iconId) {
+    const f = document.getElementById(id);
+    const i = document.getElementById(iconId);
+    f.type = f.type === 'password' ? 'text' : 'password';
+    i.className = f.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+}
 
+function checkStrength(v) {
+    let s = 0;
+    if (v.length >= 8)             s++;
+    if (/[A-Z]/.test(v))           s++;
+    if (/[0-9]/.test(v))           s++;
+    if (/[^A-Za-z0-9]/.test(v))   s++;
+    const map = [
+        {w:'0%',   c:'#dee2e6', t:''},
+        {w:'25%',  c:'#e74c3c', t:'Weak'},
+        {w:'50%',  c:'#f39c12', t:'Fair'},
+        {w:'75%',  c:'#3498db', t:'Good'},
+        {w:'100%', c:'#27ae60', t:'Strong'},
+    ];
+    const lvl = v.length === 0 ? map[0] : map[s];
+    const bar = document.getElementById('strengthBar');
+    const lbl = document.getElementById('strengthLabel');
+    bar.style.width      = lvl.w;
+    bar.style.background = lvl.c;
+    lbl.textContent      = lvl.t;
+    lbl.style.color      = lvl.c;
+}
 </script>
 </body>
 </html>
