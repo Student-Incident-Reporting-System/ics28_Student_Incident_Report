@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
                     <input type="password" name="password" id="pwd"
                            class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>"
-                           placeholder="Min. 8 chars with letters &amp; numbers"
+                           placeholder="Min. 6 characters"
                            oninput="checkStrength(this.value)">
                     <button type="button" class="btn btn-outline-secondary" onclick="togglePwd('pwd','eye1')">
                         <i class="bi bi-eye" id="eye1"></i>
@@ -201,7 +201,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                 </div>
             </div>
-
             <!-- Strength bar -->
             <div class="mb-3">
                 <div class="strength-bar-bg mt-1">
