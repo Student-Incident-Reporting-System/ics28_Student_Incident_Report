@@ -194,3 +194,34 @@ $logs = $db->query("
         </div>
     </div>
 </div>
+
+<?php
+$extraJS = '
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+// Doughnut — status
+new Chart(document.getElementById("chartStatus"),{
+    type:"doughnut",
+    data:{
+        labels:'.json_encode($statusLabels).',
+        datasets:[{data:'.json_encode($statusData).',
+            backgroundColor:["#e74c3c","#f39c12","#27ae60","#95a5a6"],
+            borderWidth:2,borderColor:"#fff"}]
+    },
+    options:{plugins:{legend:{position:"bottom"}},cutout:"65%"}
+});
+// Bar — category
+new Chart(document.getElementById("chartCat"),{
+    type:"bar",
+    data:{
+        labels:'.json_encode($catLabels).',
+        datasets:[{label:"Incidents",data:'.json_encode($catData).',
+            backgroundColor:"rgba(231,76,60,.75)",borderRadius:5}]
+    },
+    options:{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{stepSize:1}}}}
+});
+// DataTable
+$(()=>{ $("#tblRecent").DataTable({pageLength:5,lengthMenu:[5,10],order:[[5,"desc"]]}); });
+</script>';
+require_once 'layout_end.php';
+?>
