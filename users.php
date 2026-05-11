@@ -91,3 +91,23 @@ $rows = $db->query("
     GROUP BY u.id
     ORDER BY u.role DESC, u.full_name
 ");
+
+// ── RIGHT JOIN demo: categories that have NO incidents ────────
+// RIGHT JOIN returns all categories; WHERE i.id IS NULL filters to unused ones
+$unusedCats = $db->query("
+    SELECT ic.name, ic.severity_level
+    FROM incidents i
+    RIGHT JOIN incident_categories ic ON i.category_id = ic.id  -- RIGHT JOIN: all categories
+    WHERE i.id IS NULL                                           -- keep only those with no incidents
+    ORDER BY ic.name
+");
+?>
+
+<?php if ($msg): ?>
+<div class="alert alert-<?= $msgType ?> alert-dismissible fade show d-flex align-items-center gap-2">
+    <i class="bi bi-<?= $msgType==='success'?'check-circle':'exclamation-circle' ?>"></i>
+    <?= htmlspecialchars($msg) ?>
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+</div>
+<?php endif; ?>
+
