@@ -79,3 +79,15 @@ if (isset($_GET['edit']) && ctype_digit($_GET['edit'])) {
     $s->bind_param('i', $editId); $s->execute();
     $edit = $s->get_result()->fetch_assoc(); $s->close();
 }
+
+// ── Fetch all users with stats (LEFT JOINs) ──────────────────
+$rows = $db->query("
+    SELECT u.id, u.username, u.full_name, u.email, u.role, u.created_at,
+           COUNT(DISTINCT i.id)  incidents_reported,   -- LEFT JOIN: users with 0 reports still appear
+           COUNT(DISTINCT al.id) activity_count         -- LEFT JOIN: users with no logs still appear
+    FROM users u
+    LEFT JOIN incidents i      ON i.reported_by = u.id  -- LEFT JOIN: count incidents reported
+    LEFT JOIN activity_logs al ON al.user_id    = u.id  -- LEFT JOIN: count activity entries
+    GROUP BY u.id
+    ORDER BY u.role DESC, u.full_name
+");
