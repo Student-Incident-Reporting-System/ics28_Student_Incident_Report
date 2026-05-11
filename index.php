@@ -43,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,122 +52,108 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-         body {
-            background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%);
+        body {
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%);
+            display: flex; align-items: center; justify-content: center;
+            padding: 2rem 1rem;
         }
-        .login-card {
+        .card-wrap {
+            width: 100%; max-width: 430px;
             background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            width: 100%;
-            max-width: 420px;
+            border-radius: 18px;
+            box-shadow: 0 24px 64px rgba(0,0,0,.35);
         }
-        .login-header {
-            background: linear-gradient(135deg, #1a3a5c, #2d6a9f);
-            color: #fff;
-            padding: 2rem;
-            text-align: center;
+        .card-top {
+            background: linear-gradient(135deg,#1a3a5c,#2d6a9f);
+            border-radius: 18px 18px 0 0;
+            padding: 2.2rem 2rem 1.8rem;
+            text-align: center; color: #fff;
         }
-        .login-header .shield-icon {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
+        .card-top .icon { font-size: 3rem; color: #7ec8e3; }
+        .card-body-inner { padding: 2rem; }
+        .form-control:focus { border-color:#2d6a9f; box-shadow:0 0 0 .2rem rgba(45,106,159,.25); }
+        .btn-primary-custom {
+            background: linear-gradient(135deg,#1a3a5c,#2d6a9f);
+            border: none; color: #fff; font-weight: 600;
+            padding: .75rem; border-radius: 8px; width: 100%;
+            font-size: 1rem; transition: opacity .2s;
         }
-        .login-body { padding: 2rem; }
-        .form-control:focus {
-            border-color: #2d6a9f;
-            box-shadow: 0 0 0 0.2rem rgba(45,106,159,0.25);
+        .btn-primary-custom:hover { opacity: .88; color: #fff; }
+        .demo-box {
+            background: #f0f7ff; border: 1px solid #bee3f8;
+            border-radius: 8px; padding: .7rem 1rem; font-size: .84rem;
         }
-        .btn-login {
-            background: linear-gradient(135deg, #1a3a5c, #2d6a9f);
-            border: none;
-            color: #fff;
-            padding: 0.75rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: opacity 0.2s;
-        }
-        .btn-login:hover { opacity: 0.9; color: #fff; }
-        .demo-creds {
-            background: #f0f7ff;
-            border: 1px solid #bee3f8;
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            font-size: 0.85rem;
-        }
+        .divider { border-top: 1px solid #e9ecef; margin: 1.2rem 0; }
     </style>
 </head>
 <body>
-    <div class="login-card">
-        <div class="login-header">
-            <div class="shield-icon"><i class="bi bi-shield-check"></i></div>
-            <h4 class="mb-1 fw-bold">Student Safety System</h4>
-            <p class="mb-0 opacity-75 small">Incident Reporting & Management</p>
+<div class="card-wrap">
+    <div class="card-top">
+        <div class="icon"><i class="bi bi-shield-check"></i></div>
+        <h4 class="fw-bold mt-1 mb-1">Student Safety System</h4>
+        <p class="mb-0 opacity-75 small">Incident Reporting &amp; Management</p>
+    </div>
+    <div class="card-body-inner">
+
+        <?php if ($error): ?>
+        <div class="alert alert-danger d-flex align-items-center gap-2 py-2">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <?= htmlspecialchars($error) ?>
         </div>
-        <div class="login-body">
-            <?php if ($error): ?>
-                <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    <?= htmlspecialchars($error) ?>
-                </div>
-            <?php endif; ?>
+        <?php endif; ?>
 
-            <form method="POST" action="index.php" novalidate>
-                <div class="mb-3">
-                    <label for="username" class="form-label fw-semibold">Username</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        <input type="text" class="form-control" id="username" name="username"
-                               value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
-                               placeholder="Enter username" required autofocus>
-                    </div>
+        <form method="POST" novalidate>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Username</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" name="username" class="form-control"
+                           value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
+                           placeholder="Enter username" required autofocus>
                 </div>
-                <div class="mb-4">
-                    <label for="password" class="form-label fw-semibold">Password</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" class="form-control" id="password" name="password"
-                               placeholder="Enter password" required>
-                        <button class="btn btn-outline-secondary" type="button" id="togglePwd">
-                            <i class="bi bi-eye" id="eyeIcon"></i>
-                        </button>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-login w-100">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
-                </button>
-            </form>
-
-            <div class="demo-creds mt-3">
-                <strong><i class="bi bi-info-circle me-1"></i>Demo Credentials</strong><br>
-                Username: <code>admin</code> &nbsp;|&nbsp; Password: <code>password</code>
             </div>
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" id="pwd" class="form-control"
+                           placeholder="Enter password" required>
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePwd()">
+                        <i class="bi bi-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="btn-primary-custom">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            </button>
+        </form>
 
-            <p class="text-center mt-3 mb-0 small text-muted">
-                Don't have an account?
-                <a href="register.php" class="text-decoration-none fw-semibold">Create one</a>
-            </p>
+        <div class="demo-box mt-3">
+            <strong><i class="bi bi-info-circle me-1"></i>Demo credentials</strong><br>
+            Username: <code>admin</code> &nbsp;·&nbsp; Password: <code>password</code>
         </div>
+
+        <div class="divider"></div>
+
+        <p class="text-center mb-0 small">
+            Don't have an account?
+        </p>
+        <a href="register.php" class="btn btn-outline-primary w-100 mt-2">
+            <i class="bi bi-person-plus me-2"></i>Create an Account
+        </a>
+
+    </div>
     </div>
 
     // JavaScript to toggle password visibility
-   <script>
-        document.getElementById('togglePwd').addEventListener('click', function () {
-            const pwd = document.getElementById('password');
-            const icon = document.getElementById('eyeIcon');
-            if (pwd.type === 'password') {
-                pwd.type = 'text';
-                icon.className = 'bi bi-eye-slash';
-            } else {
-                pwd.type = 'password';
-                icon.className = 'bi bi-eye';
-            }
-        });
-    </script>
-
+ <script>
+function togglePwd() {
+    const f = document.getElementById('pwd');
+    const i = document.getElementById('eyeIcon');
+    f.type = f.type === 'password' ? 'text' : 'password';
+    i.className = f.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+}
+</script>
 </body>
+</html>
