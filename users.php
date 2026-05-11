@@ -239,3 +239,16 @@ $unusedCats = $db->query("
         </div>
     </div>
 </div>
+
+<?php
+$extraJS = '
+<script>
+$(()=>{ $("#tblUsers").DataTable({pageLength:10,order:[[3,"desc"]],columnDefs:[{orderable:false,targets:7}]}); });
+function confirmDel(id,u){
+    document.getElementById("delCode").textContent=u;
+    document.getElementById("delBtn").href="users.php?delete="+id;
+    new bootstrap.Modal(document.getElementById("delModal")).show();
+}
+</script>';
+require_once 'layout_end.php';
+?>
