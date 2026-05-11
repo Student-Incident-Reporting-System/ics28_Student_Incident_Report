@@ -26,10 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($f['email'] && !filter_var($f['email'], FILTER_VALIDATE_EMAIL))
         $errors['email'] = 'Enter a valid email address.';
 
-    if (strlen($password) < 8)
-        $errors['password'] = 'Password must be at least 8 characters.';
-    elseif (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password))
-        $errors['password'] = 'Password must contain at least one letter and one number.';
+    if (strlen($password) < 6)
+        $errors['password'] = 'Password must be at least 6 characters.';
 
     if ($password !== $confirm)
         $errors['confirm'] = 'Passwords do not match.';
