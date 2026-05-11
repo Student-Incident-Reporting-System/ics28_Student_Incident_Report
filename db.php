@@ -7,12 +7,12 @@ define('DB_USER', 'root');       // Change to your MySQL username
 define('DB_PASS', '');           // Change to your MySQL password
 define('DB_NAME', 'student_safety');
 
-function getDB() {
+function getDB(): mysqli {
     static $conn = null;
     if ($conn === null) {
         $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         if ($conn->connect_error) {
-            die(json_encode(['error' => 'Database connection failed: ' . $conn->connect_error]));
+            die('<p style="color:red;font-family:sans-serif">DB Error: ' . $conn->connect_error . '</p>');
         }
         $conn->set_charset('utf8mb4');
     }
