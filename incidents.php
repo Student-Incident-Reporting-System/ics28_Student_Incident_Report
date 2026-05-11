@@ -98,3 +98,123 @@ $categoryOpts = $db->query("SELECT id,name,severity_level FROM incident_categori
     <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
 </div>
 <?php endif; ?>
+
+
+<!-- Form -->
+<div class="kcard mb-4">
+    <div class="p-3 border-bottom fw-semibold">
+        <i class="bi bi-<?= $edit?'pencil-square':'plus-circle' ?> me-2 text-primary"></i>
+        <?= $edit ? 'Edit Incident' : 'Report New Incident' ?>
+    </div>
+    <div class="p-3">
+        <form method="POST">
+            <?php if ($edit): ?><input type="hidden" name="edit_id" value="<?= $edit['id'] ?>"><?php endif; ?>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Student <span class="text-danger">*</span></label>
+                    <select name="student_id" class="form-select" required>
+                        <option value="">— Select —</option>
+                        <?php while ($s = $studentOpts->fetch_assoc()): ?>
+                        <option value="<?= $s['id'] ?>" <?= ($edit && $edit['student_id']==$s['id'])?'selected':'' ?>>
+                            <?= htmlspecialchars("{$s['student_code']} — {$s['first_name']} {$s['last_name']} (Gr.{$s['grade']})") ?>
+                        </option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Category <span class="text-danger">*</span></label>
+                    <select name="category_id" class="form-select" required>
+                        <option value="">— Select —</option>
+                        <?php while ($c = $categoryOpts->fetch_assoc()): ?>
+                        <option value="<?= $c['id'] ?>" <?= ($edit && $edit['category_id']==$c['id'])?'selected':'' ?>>
+                            <?= htmlspecialchars("{$c['name']} ({$c['severity_level']})") ?>
+                        </option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Status</label>
+                    <select name="status" class="form-select">
+                        <?php foreach (['open','under_review','resolved','closed'] as $st): ?>
+                        <option value="<?= $st ?>" <?= ($edit && $edit['status']===$st)?'selected':'' ?>>
+                            <?= ucfirst(str_replace('_',' ',$st)) ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+                    <input type="text" name="title" class="form-control" required
+                           value="<?= htmlspecialchars($edit['title'] ?? '') ?>" placeholder="Brief incident title">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Location</label>
+                    <input type="text" name="location" class="form-control"
+                           value="<?= htmlspecialchars($edit['location'] ?? '') ?>" placeholder="e.g. Cafeteria">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Date <span class="text-danger">*</span></label>
+                    <input type="date" name="incident_date" class="form-control" required
+                           value="<?= htmlspecialchars($edit['incident_date'] ?? date('Y-m-d')) ?>">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Time</label>
+                    <input type="time" name="incident_time" class="form-control"
+                           value="<?= htmlspecialchars($edit['incident_time'] ?? '') ?>">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Action Taken</label>
+                    <input type="text" name="action_taken" class="form-control"
+                           value="<?= htmlspecialchars($edit['action_taken'] ?? '') ?>"
+                           placeholder="Steps taken to address the incident">
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Description <span class="text-danger">*</span></label>
+                    <textarea name="description" class="form-control" rows="3" required
+                              placeholder="Detailed description..."><?= htmlspecialchars($edit['description'] ?? '') ?></textarea>
+                </div>
+                <div class="col-12 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-<?= $edit?'save':'plus-lg' ?> me-1"></i>
+                        <?= $edit ? 'Update' : 'Submit Incident' ?>
+                    </button>
+                    <?php if ($edit): ?>
+                    <a href="incidents.php" class="btn btn-outline-secondary">Cancel</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete modal -->
+<div class="modal fade" id="delModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-danger"><i class="bi bi-trash me-2"></i>Confirm Delete</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">Delete incident <strong id="delCode"></strong>? This cannot be undone.</div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a id="delBtn" href="#" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+$extraJS = '
+<script>
+$(()=>{ $("#tblIncidents").DataTable({pageLength:10,order:[[6,"desc"]],columnDefs:[{orderable:false,targets:9}]}); });
+function confirmDel(id,code){
+    document.getElementById("delCode").textContent=code;
+    document.getElementById("delBtn").href="incidents.php?delete="+id;
+    new bootstrap.Modal(document.getElementById("delModal")).show();
+}
+</script>';
+require_once 'layout_end.php';
+?>
+
+
