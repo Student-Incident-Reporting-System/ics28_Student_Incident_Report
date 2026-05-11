@@ -33,3 +33,41 @@ if (isset($_GET['delete']) && ctype_digit($_GET['delete'])) {
         }
     }
 }
+
+// ── CREATE / UPDATE ─────
+if ($_SERVER['REQUEST_METHOD']==='POST') {
+    $editId   = isset($_POST['edit_id']) && ctype_digit($_POST['edit_id']) ? (int)$_POST['edit_id'] : null;
+    $username = trim($_POST['username']  ?? '');
+    $fullName = trim($_POST['full_name'] ?? '');
+    $email    = trim($_POST['email']     ?? '');
+    $role     = $_POST['role']           ?? 'staff';
+    $password = $_POST['password']       ?? '';
+
+    if ($username && $fullName) {
+        if ($editId) {
+            if ($password) {
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $db->prepare("UPDATE users SET username=?,full_name=?,email=?,role=?,password=? WHERE id=?");
+                $stmt->bind_param('sssssi',$username,$fullName,$email,$role,$hash,$editId);
+            } else {
+                $stmt = $db->prepare("UPDATE users SET username=?,full_name=?,email=?,role=? WHERE id=?");
+                $stmt->bind_param('ssssi',$username,$fullName,$email,$role,$editId);
+            }
+            $stmt->execute(); $stmt->close();
+            logActivity($user['id'],'UPDATE','users',$editId,"Updated $username");
+            $msg = 'User updated.';
+        } else {
+            if (!$password) { $msg='Password required for new users.'; $msgType='danger'; }
+            else {
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $db->prepare("INSERT INTO users (username,password,full_name,role,email) VALUES (?,?,?,?,?)");
+                $stmt->bind_param('sssss',$username,$hash,$fullName,$role,$email);
+                if ($stmt->execute()) {
+                    logActivity($user['id'],'CREATE','users',$stmt->insert_id,"Created $username");
+                    $msg = "User '$username' created.";
+                } else { $msg='Error: Username already exists.'; $msgType='danger'; }
+                $stmt->close();
+            }
+        }
+    } else { $msg='Username and full name are required.'; $msgType='danger'; }
+}
