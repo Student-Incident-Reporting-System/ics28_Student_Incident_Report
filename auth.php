@@ -2,28 +2,30 @@
 
 // Session & Authentication Helper
 
-session_start();
-
-function isLoggedIn() {
-    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-function requireLogin() {
+function isLoggedIn(): bool {
+    return !empty($_SESSION['user_id']);
+}
+
+function requireLogin(): void {
     if (!isLoggedIn()) {
         header('Location: index.php');
         exit();
     }
 }
 
-function requireAdmin() {
+function requireAdmin(): void {
     requireLogin();
-    if ($_SESSION['user_role'] !== 'admin') {
+    if (($_SESSION['user_role'] ?? '') !== 'admin') {
         header('Location: dashboard.php?error=unauthorized');
         exit();
     }
 }
 
-function currentUser() {
+function currentUser(): array {
     return [
         'id'        => $_SESSION['user_id']   ?? null,
         'username'  => $_SESSION['username']  ?? '',
