@@ -186,7 +186,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
- 
+            <!-- Password -->
+            <div class="mb-1">
+                <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" id="pwd"
+                           class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>"
+                           placeholder="Min. 8 chars with letters &amp; numbers"
+                           oninput="checkStrength(this.value)">
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePwd('pwd','eye1')">
+                        <i class="bi bi-eye" id="eye1"></i>
+                    </button>
+                    <?php if (isset($errors['password'])): ?>
+                    <div class="invalid-feedback"><?= htmlspecialchars($errors['password']) ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                    <input type="password" name="password_confirm" id="pwd2"
+                           class="form-control <?= isset($errors['confirm']) ? 'is-invalid' : '' ?>"
+                           placeholder="Re-enter your password">
+                    <button type="button" class="btn btn-outline-secondary" onclick="togglePwd('pwd2','eye2')">
+                        <i class="bi bi-eye" id="eye2"></i>
+                    </button>
+                    <?php if (isset($errors['confirm'])): ?>
+                    <div class="invalid-feedback"><?= htmlspecialchars($errors['confirm']) ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="alert alert-info d-flex gap-2 align-items-start py-2 mb-3" style="font-size:.84rem;">
+                <i class="bi bi-info-circle-fill mt-1 flex-shrink-0"></i>
+                New accounts are created with <strong>&nbsp;Staff&nbsp;</strong> role.
+                An admin can upgrade your role later.
+            </div>
+
+            <button type="submit" class="btn btn-register w-100">
+                <i class="bi bi-person-check me-2"></i>Create Account
+            </button>
+        </form>
+
+        <div class="divider"></div>
+        <p class="text-center mb-0 small">
+            Already have an account?
+            <a href="index.php" class="btn btn-outline-secondary btn-sm ms-1">
+                <i class="bi bi-box-arrow-in-right me-1"></i>Sign in
+            </a>
+        </p>
+
+    <?php endif; ?>
+    </div>
 </div>
 <script>
 
