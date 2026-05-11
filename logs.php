@@ -7,3 +7,8 @@
 $pageTitle = 'Activity Logs';
 require_once 'db.php';
 require_once 'layout.php';
+
+
+
+
+
