@@ -169,7 +169,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
+            <!-- Email Diri Dapita -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">
+                    Email <span class="text-muted fw-normal small">(optional)</span>
+                </label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <input type="email" name="email"
+                           class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>"
+                           value="<?= htmlspecialchars($f['email'] ?? '') ?>"
+                           placeholder="you@school.edu">
+                    <?php if (isset($errors['email'])): ?>
+                    <div class="invalid-feedback"><?= htmlspecialchars($errors['email']) ?></div>
+                    <?php endif; ?>
+                </div>
+            </div>
 
+ 
 </div>
 <script>
 
